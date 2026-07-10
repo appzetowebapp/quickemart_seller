@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 
 class AppConfig {
   // ==================== APP IDENTITY ====================
-  static const String appName = 'Indian Bite Delivery';
+  static const String appName = 'QuickeMart Seller';
   static const String appLogoPath = 'assets/images/logo.png';
 
   // ==================== COLORS & THEME ====================
@@ -51,13 +51,14 @@ class AppConfig {
 
   // Dark Theme Status Bar
   static const Color statusBarColorDark = Color(0x00000000); // Transparent
-  static const Brightness statusBarIconBrightnessDark = Brightness.light; // Light icons
+  static const Brightness statusBarIconBrightnessDark =
+      Brightness.light; // Light icons
   static const Color navigationBarColorDark = Color(0xFF121212); // Dark Gray
   static const Brightness navigationBarIconBrightnessDark = Brightness.light;
 
   // ==================== WEB URL CONFIGURATION ====================
   // ⚠️ CHANGE THIS URL TO YOUR WEB APPLICATION ⚠️
-  static const String webUrl = 'https://theindianbite.com/food/delivery';
+  static const String webUrl = 'https://quickemartcom.com/seller';
 
   /// Role sent with FCM token registration so the backend can target this device.
   static String get appRole {
@@ -89,7 +90,7 @@ class AppConfig {
       'Notifications from the website and push notifications';
 
   // Critical Notification channel ID (Android)
-  static const String criticalChannelId = 'critical_order_alerts_v5';
+  static const String criticalChannelId = 'critical_order_alerts_v6';
 
   // Critical Notification channel name (Android)
   static const String criticalChannelName = 'New Order Alerts';
@@ -109,7 +110,7 @@ class AppConfig {
 
   // ==================== API CONFIGURATION ====================
   // Base URL for API endpoints (update this with your actual API base URL)
-  static const String apiBaseUrl = 'https://theindianbite.com/api';
+  static const String apiBaseUrl = 'https://quickemartcom.com/api';
 
   // ==================== SPLASH SCREEN ====================
   static const int splashDurationSeconds = 2;

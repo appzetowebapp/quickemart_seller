@@ -1918,8 +1918,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen>
     with WidgetsBindingObserver {
-  static const platform =
-      MethodChannel('com.indians.bite.delivery/geolocation');
+  static const platform = MethodChannel('com.quickemart.seller/geolocation');
   InAppWebViewController? _webViewController;
   bool _isLoading = true;
   double _loadingProgress = 0.0;
@@ -2105,6 +2104,7 @@ class _WebViewScreenState extends State<WebViewScreen>
     if (body['restaurant'] is Map) fromEntity(body['restaurant'] as Map);
     if (body['delivery'] is Map) fromEntity(body['delivery'] as Map);
     if (body['driver'] is Map) fromEntity(body['driver'] as Map);
+    if (body['seller'] is Map) fromEntity(body['seller'] as Map);
     if (body['deliveryPartner'] is Map) {
       fromEntity(body['deliveryPartner'] as Map);
     }
@@ -2117,8 +2117,23 @@ class _WebViewScreenState extends State<WebViewScreen>
       }
       if (dataObj['delivery'] is Map) fromEntity(dataObj['delivery'] as Map);
       if (dataObj['driver'] is Map) fromEntity(dataObj['driver'] as Map);
+      if (dataObj['seller'] is Map) fromEntity(dataObj['seller'] as Map);
       if (dataObj['deliveryPartner'] is Map) {
         fromEntity(dataObj['deliveryPartner'] as Map);
+      }
+    }
+
+    if (phone == null && body['result'] is Map) {
+      final resultObj = body['result'] as Map;
+      if (resultObj['user'] is Map) fromEntity(resultObj['user'] as Map);
+      if (resultObj['restaurant'] is Map) {
+        fromEntity(resultObj['restaurant'] as Map);
+      }
+      if (resultObj['delivery'] is Map) fromEntity(resultObj['delivery'] as Map);
+      if (resultObj['driver'] is Map) fromEntity(resultObj['driver'] as Map);
+      if (resultObj['seller'] is Map) fromEntity(resultObj['seller'] as Map);
+      if (resultObj['deliveryPartner'] is Map) {
+        fromEntity(resultObj['deliveryPartner'] as Map);
       }
     }
 
@@ -2543,7 +2558,7 @@ class _WebViewScreenState extends State<WebViewScreen>
             var isLogin = urlString.includes('/auth/login') || 
                           urlString.includes('/users/login') ||
                           urlString.includes('/auth/signup-verify') ||
-                          urlString.includes('/v1/food/auth/delivery/verify-otp');
+                          urlString.includes('/seller/login');
             
             // Call original fetch
             try {
@@ -2586,7 +2601,7 @@ class _WebViewScreenState extends State<WebViewScreen>
             if (url && (url.includes('/auth/login') || 
                         url.includes('/users/login') ||
                         url.includes('/auth/signup-verify') ||
-                        url.includes('/v1/food/auth/delivery/verify-otp'))) {
+                        url.includes('/seller/login'))) {
                this.addEventListener('load', function() {
                   try {
                     var responseBody = self.responseText;
@@ -2637,15 +2652,21 @@ class _WebViewScreenState extends State<WebViewScreen>
                 // 1. structure: { "accessToken": "...", "user": { "phone": "..." } }
                 // 2. structure: { "token": "...", "data": { "user": { "phoneNumber": "..." } } }
 
-                String? accessToken = body['accessToken']?.toString();
-                if (accessToken == null && body['accessToken'] != null) {
+                String? accessToken = body['token']?.toString();
+                if (accessToken == null && body['token'] != null) {
                   accessToken = body['accessToken'].toString();
                 }
                 // Check inside data object (new structure)
                 if (accessToken == null &&
                     body['data'] != null &&
                     body['data'] is Map) {
-                  accessToken = body['data']['accessToken']?.toString();
+                  accessToken = body['data']['token']?.toString();
+                }
+                // Check inside result object (new structure)
+                if (accessToken == null &&
+                    body['result'] != null &&
+                    body['result'] is Map) {
+                  accessToken = body['result']['token']?.toString();
                 }
 
                 if (accessToken != null && accessToken.isNotEmpty) {
@@ -3525,6 +3546,24 @@ class _WebViewScreenState extends State<WebViewScreen>
                       onWebViewCreated: (controller) async {
                         _webViewController = controller;
                         debugPrint('✅ WebView created');
+
+                        // JavaScript handlers to stop the order alert ringtone
+                        controller.addJavaScriptHandler(
+                          handlerName: 'stopRingtone',
+                          callback: (args) async {
+                            debugPrint(
+                                '🔕 JS stopRingtone called from website');
+                            await NotificationService().stopOrderAlertSound();
+                          },
+                        );
+                        controller.addJavaScriptHandler(
+                          handlerName: 'stopOrderAlertSound',
+                          callback: (args) async {
+                            debugPrint(
+                                '🔕 JS stopOrderAlertSound called from website');
+                            await NotificationService().stopOrderAlertSound();
+                          },
+                        );
 
                         // Capture blobs created via URL.createObjectURL to bypass CSP
                         controller.addJavaScriptHandler(

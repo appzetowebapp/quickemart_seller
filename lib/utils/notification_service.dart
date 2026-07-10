@@ -358,7 +358,8 @@ class NotificationService {
         AppConfig.criticalChannelName,
         description: AppConfig.criticalChannelDescription,
         importance: Importance.max,
-        playSound: false,
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound(AppConfig.notificationSoundName),
         enableVibration: true,
         showBadge: true,
         enableLights: true,
@@ -485,6 +486,7 @@ class NotificationService {
   Future<void> stopOrderAlertSound() async {
     try {
       FlutterBackgroundService().invoke('stopRingtone');
+      await cancelAllNotifications();
     } catch (_) {}
   }
 

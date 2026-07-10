@@ -45,7 +45,7 @@ class ApiService {
         return false;
       }
 
-      final url = _getApiUrl('/v1/fcm-tokens/mobile/save');
+      final url = _getApiUrl('/push/register');
 
       final accessToken = PrefsUtil.getAccessToken();
       if (accessToken == null || accessToken.isEmpty) {
@@ -58,7 +58,7 @@ class ApiService {
       final requestBody = <String, dynamic>{
         'token': token,
         //'fcmToken': token,
-        // 'platform': platformValue,
+        'platform': 'app',
         //'appRole': role,
         //'appType': role,
         //'role': role,
